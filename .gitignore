@@ -1,0 +1,16 @@
+# Build results
+bin/
+obj/
+
+# Output files
+*.txt
+!Directory.Build.props
+!Directory.Build.targets
+
+# IDE specific (remove if you don't use these)
+.vscode/
+.idea/
+
+# System Files
+.DS_Store
+Thumbs.db
