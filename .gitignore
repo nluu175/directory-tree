@@ -14,3 +14,5 @@ obj/
 # System Files
 .DS_Store
 Thumbs.db
+
+*.txt
