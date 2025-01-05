@@ -1,13 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Collections.Generic;
+﻿using System.Text;
 
 class DirectoryTree
 {
-    private static StringBuilder outputBuilder = new StringBuilder();
-    private static HashSet<string> excludedFolders = new HashSet<string>();
+    private static StringBuilder _outputBuilder = new StringBuilder();
+    private static HashSet<string> _excludedFolders = new HashSet<string>();
 
     static void Main(string[] args)
     {
@@ -27,9 +23,10 @@ class DirectoryTree
         if (excludeIndex != -1)
         {
             // If -e is provided, everything after it are excluded folders
+            // Thus, i runs from excludeIndex + 1
             for (int i = excludeIndex + 1; i < args.Length; i++)
             {
-                excludedFolders.Add(args[i].ToLower());
+                _excludedFolders.Add(args[i].ToLower());
             }
             // Output file is between root path and -e flag (if provided)
             outputFile = excludeIndex > 1 ? args[1] : "directory-tree.txt";
@@ -50,12 +47,12 @@ class DirectoryTree
         string rootName = new DirectoryInfo(rootPath).Name;
         string rootLine = $"{rootName}/";
         Console.WriteLine(rootLine);
-        outputBuilder.AppendLine(rootLine);
+        _outputBuilder.AppendLine(rootLine);
 
-        if (excludedFolders.Count > 0)
+        if (_excludedFolders.Count > 0)
         {
             Console.WriteLine("\nExcluded folders:");
-            foreach (var folder in excludedFolders)
+            foreach (var folder in _excludedFolders)
             {
                 Console.WriteLine($"- {folder}");
             }
@@ -67,7 +64,7 @@ class DirectoryTree
         // Write to file
         try
         {
-            File.WriteAllText(outputFile, outputBuilder.ToString());
+            File.WriteAllText(outputFile, _outputBuilder.ToString());
             Console.WriteLine($"\nTree structure has been saved to {outputFile}");
         }
         catch (Exception ex)
@@ -85,7 +82,7 @@ class DirectoryTree
 
             // Filter out excluded directories
             directories = directories.Where(d =>
-                !excludedFolders.Contains(new DirectoryInfo(d).Name.ToLower())).ToArray();
+                !_excludedFolders.Contains(new DirectoryInfo(d).Name.ToLower())).ToArray();
 
             // Returns the names of files (including their paths) in the specified directory.
             var files = Directory.GetFiles(path);
@@ -108,7 +105,7 @@ class DirectoryTree
 
                 string line = $"{indent}{connector}{name}";
                 Console.WriteLine(line);
-                outputBuilder.AppendLine(line);
+                _outputBuilder.AppendLine(line);
 
                 if (isDirectory)
                 {
@@ -120,13 +117,13 @@ class DirectoryTree
         {
             string line = $"{indent}├── (Access Denied)";
             Console.WriteLine(line);
-            outputBuilder.AppendLine(line);
+            _outputBuilder.AppendLine(line);
         }
         catch (Exception ex)
         {
             string line = $"{indent}├── Error: {ex.Message}";
             Console.WriteLine(line);
-            outputBuilder.AppendLine(line);
+            _outputBuilder.AppendLine(line);
         }
     }
 }
